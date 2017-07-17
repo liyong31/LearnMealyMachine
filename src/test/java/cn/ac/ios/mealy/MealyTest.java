@@ -1,11 +1,11 @@
 package cn.ac.ios.mealy;
 
-import ac.ac.ios.oracle.EquivalenceOracle;
-import ac.ac.ios.oracle.MembershipOracle;
-import ac.ac.ios.query.Query;
-import ac.ac.ios.table.HashableValue;
-import ac.ac.ios.table.HashableValueInt;
 import cn.ac.ios.learner.mealy.LearnerMealy;
+import cn.ac.ios.oracle.EquivalenceOracle;
+import cn.ac.ios.oracle.MembershipOracle;
+import cn.ac.ios.query.Query;
+import cn.ac.ios.table.HashableValue;
+import cn.ac.ios.table.HashableValueInt;
 import cn.ac.ios.words.Alphabet;
 
 public class MealyTest {

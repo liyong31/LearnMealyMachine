@@ -14,30 +14,21 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package ac.ac.ios.oracle;
+package cn.ac.ios.table;
 
-import java.util.ArrayList;
-import java.util.List;
+import cn.ac.ios.words.Word;
 
-import ac.ac.ios.query.Query;
+public class ObservationRowBase extends ObservationRowAbstract {
 
-public interface MembershipOracle<O> {
-	
-	O answerMembershipQuery(Query<O> query);
-	
-	default List<O> answerMembershipQueries(@SuppressWarnings("unchecked") Query<O>... queries) {
-		List<O> answers = new ArrayList<>();
-		for(Query<O> query : queries) {
-			answers.add(answerMembershipQuery(query));
-		}
-		return answers;
+	public ObservationRowBase(Word word) {
+		super(word);
 	}
 	
-	default List<O> answerMembershipQueries(List<Query<O>> queries) {
-		List<O> answers = new ArrayList<>();
-		for(Query<O> query : queries) {
-			answers.add(answerMembershipQuery(query));
+	public boolean equals(Object o) {
+		if(! (o instanceof ObservationRowBase)) {
+			return false;
 		}
-		return answers;
-	}
+		ObservationRowBase other = (ObservationRowBase)o;
+		return word.equals(other.word); // one row one word
+	}	
 }

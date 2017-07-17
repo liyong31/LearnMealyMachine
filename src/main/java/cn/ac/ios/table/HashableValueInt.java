@@ -14,54 +14,62 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package ac.ac.ios.table;
+package cn.ac.ios.table;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+public class HashableValueInt implements HashableValue {
 
-import cn.ac.ios.words.Word;
-
-// can not be instantiated
-public abstract class ObservationRowAbstract implements ObservationRow {
-
-	protected final Word word;
-	protected List<HashableValue> values;
+	private final int value;
 	
-	protected ObservationRowAbstract(Word word) {
-		assert word != null;
-		this.word = word;
-		this.values = new ArrayList<>();
+	public HashableValueInt(int value) {
+		this.value = value;
 	}
 	
 	@Override
-	public Word getWord() {
-		return word;
+	public boolean valueEqual(HashableValue rvalue) {
+		// TODO Auto-generated method stub
+		Integer rValue = rvalue.get(); 
+		return value == rValue.intValue();
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public Integer get() {
+		// TODO Auto-generated method stub
+		return value;
 	}
 
 	@Override
-	public List<HashableValue> getValues() {
-		return Collections.unmodifiableList(values);
+	public boolean isPair() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public <T> T getLeft() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public <T> T getRight() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public boolean isAccepting() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 	
+	@Override
 	public String toString() {
-		return word.toString();
+		return "" + value;
 	}
 	
-	public void add(HashableValue value) {
-		values.add(value);
-	}
-	
-	public void set(int index, HashableValue value) {
-		assert index >= 0;
-		while(values.size() <= index) {
-			values.add(null);
-		}
-		values.set(index, value);
-	}
-
-	public void clear() {
-		values.clear();
+	@Override
+	public int hashCode() {
+		return value;
 	}
 
 }

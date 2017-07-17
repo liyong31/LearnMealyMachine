@@ -16,10 +16,10 @@
 
 package cn.ac.ios.learner.mealy;
 
-import ac.ac.ios.table.ExprValueWord;
-import ac.ac.ios.table.HashableValueInt;
-import ac.ac.ios.table.ObservationRowBase;
-import ac.ac.ios.table.ObservationTableBase;
+import cn.ac.ios.table.ExprValueWord;
+import cn.ac.ios.table.HashableValueInt;
+import cn.ac.ios.table.ObservationRowBase;
+import cn.ac.ios.table.ObservationTableBase;
 import cn.ac.ios.words.Word;
 
 public class ObservationTableMealy extends ObservationTableBase {

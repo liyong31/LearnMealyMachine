@@ -14,34 +14,11 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package ac.ac.ios.query;
+package cn.ac.ios.oracle;
 
-import ac.ac.ios.table.ObservationRow;
-import cn.ac.ios.words.Word;
 
-/**
- * This is for interaction with membership query
- * and equivalence query, mainly for equivalence query
- * @O oracle return type 
- * */
-// 
-public interface Query<O> {
+public interface EquivalenceOracle<M, O> {
 	
-	
-	Word getPrefix();
-	
-	Word getSuffix();
-	
-	default Word getQueriedWord() {
-		return getPrefix().concat(getSuffix());
-	}
-	
-	void answerQuery(O answer);
-	
-	O getQueryAnswer();
-	
-	ObservationRow getPrefixRow();
-	
-	int getSuffixColumn();
+	O answerEquivalenceQuery(M automaton);
 
 }

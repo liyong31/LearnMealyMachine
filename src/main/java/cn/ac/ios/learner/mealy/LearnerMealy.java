@@ -20,19 +20,19 @@ import java.util.ArrayList;
 
 import java.util.List;
 
-import ac.ac.ios.oracle.MembershipOracle;
-import ac.ac.ios.query.Query;
-import ac.ac.ios.query.QuerySimple;
-import ac.ac.ios.table.ExprValue;
-import ac.ac.ios.table.HashableValue;
-import ac.ac.ios.table.HashableValueInt;
-import ac.ac.ios.table.ObservationRow;
 import cn.ac.ios.words.Word;
 
 import cn.ac.ios.learner.LearnerBase;
 import cn.ac.ios.learner.LearnerType;
 import cn.ac.ios.mealy.MealyMachine;
 import cn.ac.ios.mealy.MealyState;
+import cn.ac.ios.oracle.MembershipOracle;
+import cn.ac.ios.query.Query;
+import cn.ac.ios.query.QuerySimple;
+import cn.ac.ios.table.ExprValue;
+import cn.ac.ios.table.HashableValue;
+import cn.ac.ios.table.HashableValueInt;
+import cn.ac.ios.table.ObservationRow;
 import cn.ac.ios.words.Alphabet;
 
 //TODO later we should support totally output alphabets

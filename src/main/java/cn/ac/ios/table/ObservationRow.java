@@ -14,27 +14,43 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package ac.ac.ios.table;
-/**
- * Row value for observation table
- * Needs to be hashable
- * */
-public interface HashableValue {
-		
-	boolean valueEqual(HashableValue rvalue);
-	
-	boolean equals(Object obj);
-	
-	<T> T get();
-	
-	public int hashCode();
-	
-	boolean isPair();
-	
-    <T> T getLeft();
-    
-    <T> T getRight();
-    
-    boolean isAccepting();
+package cn.ac.ios.table;
 
+import java.util.List;
+
+import cn.ac.ios.words.Word;
+
+/**
+ * A row consists of its strings, namely its labels 
+ * and corresponding row values
+*/
+// maybe later replace O with Value type
+public interface ObservationRow {
+
+	Word getWord();
+	
+	// can not modified copy of values
+	List<HashableValue> getValues();
+	
+	// do not know whether it is necessary
+	boolean equals(Object obj);
+		
+	void add(HashableValue value);
+	
+	default boolean valuesEqual(ObservationRow other) {
+		List<HashableValue> thisValues = getValues();
+		List<HashableValue> otherValues = other.getValues();
+		assert thisValues.size() == otherValues.size();
+		for(int valNr = 0; valNr < thisValues.size(); valNr ++) {
+			if(! thisValues.get(valNr).valueEqual(otherValues.get(valNr))) {
+				return false;
+			}
+		}
+		return true;
+	}
+	
+	void set(int index, HashableValue value);
+	
+	void clear();
+	
 }

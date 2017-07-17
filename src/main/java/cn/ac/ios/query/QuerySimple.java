@@ -14,9 +14,9 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package ac.ac.ios.query;
+package cn.ac.ios.query;
 
-import ac.ac.ios.table.ObservationRow;
+import cn.ac.ios.table.ObservationRow;
 import cn.ac.ios.words.Word;
 
 /**

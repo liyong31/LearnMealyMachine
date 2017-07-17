@@ -14,62 +14,25 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package ac.ac.ios.table;
-
-public class HashableValueInt implements HashableValue {
-
-	private final int value;
+package cn.ac.ios.table;
+/**
+ * Column value for observation table
+ * Experiment value for distinguishing different row word
+ * */
+public interface ExprValue {
 	
-	public HashableValueInt(int value) {
-		this.value = value;
-	}
+	boolean equals(Object obj);
 	
-	@Override
-	public boolean valueEqual(HashableValue rvalue) {
-		// TODO Auto-generated method stub
-		Integer rValue = rvalue.get(); 
-		return value == rValue.intValue();
-	}
-
-	@SuppressWarnings("unchecked")
-	@Override
-	public Integer get() {
-		// TODO Auto-generated method stub
-		return value;
-	}
-
-	@Override
-	public boolean isPair() {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public <T> T getLeft() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public <T> T getRight() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	@Override
-	public boolean isAccepting() {
-		// TODO Auto-generated method stub
-		return false;
-	}
+	boolean valueEqual(ExprValue cvalue);
 	
-	@Override
-	public String toString() {
-		return "" + value;
-	}
+	<T> T get();
 	
-	@Override
-	public int hashCode() {
-		return value;
-	}
-
+	String toString();
+	
+	boolean isPair();
+	
+    <T> T getLeft();
+    
+    <T> T getRight();
+	
 }

@@ -16,7 +16,7 @@
 
 package cn.ac.ios.learner;
 
-import ac.ac.ios.table.HashableValue;
+import cn.ac.ios.table.HashableValue;
 
 public abstract class LearnerBase<M> implements Learner<M, HashableValue> {
 

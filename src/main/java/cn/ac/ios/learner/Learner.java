@@ -16,7 +16,7 @@
 
 package cn.ac.ios.learner;
 
-import ac.ac.ios.query.Query;
+import cn.ac.ios.query.Query;
 
 /**
  * @M the output automata hypothesis 

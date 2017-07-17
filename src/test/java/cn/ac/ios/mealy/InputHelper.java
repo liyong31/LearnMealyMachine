@@ -19,9 +19,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
-import ac.ac.ios.query.Query;
-import ac.ac.ios.query.QuerySimple;
-import ac.ac.ios.table.HashableValue;
+import cn.ac.ios.query.Query;
+import cn.ac.ios.query.QuerySimple;
+import cn.ac.ios.table.HashableValue;
 import cn.ac.ios.words.Alphabet;
 import cn.ac.ios.words.Word;
 

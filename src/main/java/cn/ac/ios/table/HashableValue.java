@@ -14,25 +14,27 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package ac.ac.ios.table;
+package cn.ac.ios.table;
 /**
- * Column value for observation table
- * Experiment value for distinguishing different row word
+ * Row value for observation table
+ * Needs to be hashable
  * */
-public interface ExprValue {
+public interface HashableValue {
+		
+	boolean valueEqual(HashableValue rvalue);
 	
 	boolean equals(Object obj);
 	
-	boolean valueEqual(ExprValue cvalue);
-	
 	<T> T get();
 	
-	String toString();
+	public int hashCode();
 	
 	boolean isPair();
 	
     <T> T getLeft();
     
     <T> T getRight();
-	
+    
+    boolean isAccepting();
+
 }
