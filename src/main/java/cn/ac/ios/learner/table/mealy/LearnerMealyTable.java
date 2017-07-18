@@ -14,7 +14,7 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.learner.mealy;
+package cn.ac.ios.learner.table.mealy;
 
 import java.util.ArrayList;
 
