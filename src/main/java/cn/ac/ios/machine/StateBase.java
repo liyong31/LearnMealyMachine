@@ -16,14 +16,49 @@
 
 package cn.ac.ios.machine;
 
-import java.util.BitSet;
+public abstract class StateBase implements State {
+	
+	protected final int index;
+	protected final Machine machine;
+	protected final Transition[] trans;
+	
+	public StateBase(Machine machine, int index) {
+		this.machine = machine;
+		this.index = index;
+		this.trans = new Transition[machine.getInAPs().size()];
+	}
+	
+	@Override
+	public Machine getMachine() {
+		return machine;
+	}
+	
+	public int getIndex() {
+		return index;
+	}
+	
+	@Override
+	public void addTransition(int letter, int state, int out) {
+		assert letter < trans.length;
+		Transition tr = trans[letter];
+		if(tr == null) {
+			tr = machine.makeTransition(state, out);
+		}
+		trans[letter] = tr;
+	}
+	
+	@Override
+	public void addTransition(int letter, int state) {
+		addTransition(letter, state, -1);
+	}
 
-public interface Acceptance {
 	
-	boolean isFinal(int state);
-	
-	BitSet getFinals();
-	
-	void setFinal(int state);
+	@Override
+	public int getSuccessor(int letter) {
+		Transition tr = trans[letter];
+		assert tr != null;
+		return tr.getSuccessor();
+	}
+
 
 }

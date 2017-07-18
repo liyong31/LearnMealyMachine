@@ -1,6 +1,7 @@
 package cn.ac.ios.mealy;
 
-import cn.ac.ios.learner.mealy.LearnerMealy;
+import cn.ac.ios.learner.mealy.LearnerMealyTable;
+import cn.ac.ios.machine.mealy.MealyMachine;
 import cn.ac.ios.oracle.EquivalenceOracle;
 import cn.ac.ios.oracle.MembershipOracle;
 import cn.ac.ios.query.Query;
@@ -24,7 +25,7 @@ public class MealyTest {
         
 		MembershipOracle<HashableValue> membershipOracle = new MembershipOracleImpl(output);
 
-		LearnerMealy learner = new LearnerMealy(input, membershipOracle);
+		LearnerMealyTable learner = new LearnerMealyTable(input, output, membershipOracle);
 		System.out.println("starting learning");
 		learner.startLearning();
 		boolean result = false;

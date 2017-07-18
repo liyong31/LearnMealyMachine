@@ -24,8 +24,8 @@ import cn.ac.ios.words.Word;
 
 import cn.ac.ios.learner.LearnerBase;
 import cn.ac.ios.learner.LearnerType;
-import cn.ac.ios.mealy.MealyMachine;
-import cn.ac.ios.mealy.MealyState;
+import cn.ac.ios.machine.State;
+import cn.ac.ios.machine.mealy.MealyMachine;
 import cn.ac.ios.oracle.MembershipOracle;
 import cn.ac.ios.query.Query;
 import cn.ac.ios.query.QuerySimple;
@@ -36,7 +36,7 @@ import cn.ac.ios.table.ObservationRow;
 import cn.ac.ios.words.Alphabet;
 
 //TODO later we should support totally output alphabets
-public class LearnerMealy extends LearnerBase<MealyMachine>{
+public class LearnerMealyTable extends LearnerBase<MealyMachine>{
 	
 	private final Alphabet inAps;
 	private final Alphabet outAps;
@@ -45,7 +45,7 @@ public class LearnerMealy extends LearnerBase<MealyMachine>{
 	private boolean alreadyStarted = false;
 	private MealyMachine machine;
 
-	public LearnerMealy(Alphabet inAps, Alphabet outAps, MembershipOracle<HashableValue> membershipOracle) {
+	public LearnerMealyTable(Alphabet inAps, Alphabet outAps, MembershipOracle<HashableValue> membershipOracle) {
 		this.inAps = inAps;
 		this.outAps = outAps;
 		this.membershipOracle = membershipOracle;
@@ -136,7 +136,7 @@ public class LearnerMealy extends LearnerBase<MealyMachine>{
 				Word suffix = columns.get(colNr).get();
 				Word word = upperTable.get(rowNr).getWord().concat(suffix);
 				int val = upperTable.get(rowNr).getValues().get(colNr).get();
-				boolean equal = machine.run(word) == val;
+				boolean equal = machine.runMealy(word) == val;
 				if(! equal) {
 					Query<HashableValue> query = new QuerySimple<>(word);
 					query.answerQuery(observationTable.getHashableValueInt(val));
@@ -176,7 +176,7 @@ public class LearnerMealy extends LearnerBase<MealyMachine>{
 		// add states one by one, ordered by the order of occurences
 		// and should in a increased order, maybe change this later
 		for(int rowNr = 0; rowNr < upperTable.size(); rowNr ++) {
-			MealyState state = machine.getState(rowNr);
+			State state = machine.getState(rowNr);
 			for(int letter = 0; letter < inAps.getAPs().size(); letter ++) {
 				int succ = getSuccessorRow(rowNr, letter);
 				int out = getOutput(upperTable.get(rowNr).getWord().append(letter)).get();

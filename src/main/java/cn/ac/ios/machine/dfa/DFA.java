@@ -14,16 +14,49 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.machine;
+package cn.ac.ios.machine.dfa;
 
-import java.util.BitSet;
 
-public interface Acceptance {
+import cn.ac.ios.machine.Acceptance;
+import cn.ac.ios.machine.MachineBase;
+import cn.ac.ios.machine.State;
+import cn.ac.ios.machine.Transition;
+
+import cn.ac.ios.words.APList;
+import cn.ac.ios.words.Word;
+
+public class DFA extends MachineBase {
 	
-	boolean isFinal(int state);
+	private final DFAAcc acc;
 	
-	BitSet getFinals();
+	public DFA(APList aps) {
+		super(aps);
+		acc = new DFAAcc();
+	}
 	
-	void setFinal(int state);
+	public APList getOutAPs() {
+		assert false: "Not supported in DFA";
+		return null;
+	}
+	
+	public int runMealy(Word word) {
+		assert false: "Not supported in DFA";
+		return -1;
+	}
+
+	@Override
+	public Acceptance getAcceptance() {
+		return acc;
+	}
+
+	@Override
+	public Transition makeTransition(int state, int out) {
+		return new DFATransition(state);
+	}
+
+	@Override
+	public State makeState(int index) {
+		return new DFAState(this, index);
+	}
 
 }

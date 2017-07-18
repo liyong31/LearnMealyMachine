@@ -16,14 +16,16 @@
 
 package cn.ac.ios.machine;
 
-import java.util.BitSet;
-
-public interface Acceptance {
+public abstract class TransitionBase implements Transition {
 	
-	boolean isFinal(int state);
+	protected final int successor;
 	
-	BitSet getFinals();
+	public TransitionBase(int successor) {
+		this.successor = successor;
+	}
 	
-	void setFinal(int state);
+	public int getSuccessor() {
+		return successor;
+	}
 
 }

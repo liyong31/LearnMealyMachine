@@ -14,16 +14,33 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.machine;
+package cn.ac.ios.machine.dfa;
 
 import java.util.BitSet;
 
-public interface Acceptance {
+import cn.ac.ios.machine.Acceptance;
+
+class DFAAcc implements Acceptance {
+
+	private final BitSet finals;
 	
-	boolean isFinal(int state);
+	public DFAAcc() {
+		finals = new BitSet();
+	}
+	@Override
+	public boolean isFinal(int state) {
+		// TODO Auto-generated method stub
+		return finals.get(state);
+	}
+
+	@Override
+	public BitSet getFinals() {
+		return (BitSet) finals.clone();
+	}
 	
-	BitSet getFinals();
-	
-	void setFinal(int state);
+	@Override
+	public void setFinal(int state) {
+		finals.set(state);
+	}
 
 }

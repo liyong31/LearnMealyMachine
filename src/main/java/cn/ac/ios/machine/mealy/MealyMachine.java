@@ -14,16 +14,53 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.machine;
+package cn.ac.ios.machine.mealy;
 
-import java.util.BitSet;
 
-public interface Acceptance {
+import cn.ac.ios.machine.Acceptance;
+import cn.ac.ios.machine.MachineBase;
+
+import cn.ac.ios.machine.State;
+import cn.ac.ios.machine.Transition;
+import cn.ac.ios.words.APList;
+import cn.ac.ios.words.Word;
+
+public class MealyMachine extends MachineBase {
 	
-	boolean isFinal(int state);
+	private final APList oApList;
 	
-	BitSet getFinals();
+	public MealyMachine(APList iAps, APList oAps) {
+		super(iAps);
+		this.oApList = oAps;
+	}
 	
-	void setFinal(int state);
+	public APList getOutAPs() {
+		return oApList;
+	}
+	
+	public boolean runDFA(Word word) {
+		assert false: "Not supported in Mealy machine";
+		return false;
+	}
+
+	@Override
+	public Acceptance getAcceptance() {
+		assert false : "Not supported in Mealy machine";
+		return null;
+	}
+
+	@Override
+	public Transition makeTransition(int state, int out) {
+		// TODO Auto-generated method stub
+		return new MealyTransition(state, out);
+	}
+
+	@Override
+	public State makeState(int index) {
+		// TODO Auto-generated method stub
+		return new MealyState(this, index);
+	}
+	
+	
 
 }

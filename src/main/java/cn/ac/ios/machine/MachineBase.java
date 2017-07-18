@@ -14,33 +14,26 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.mealy;
+package cn.ac.ios.machine;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import cn.ac.ios.words.APList;
-import cn.ac.ios.words.Word;
 
-public class MealyMachine {
+public abstract class MachineBase implements Machine {
 	
-	private int initState;
-	private final APList iApList;
-	private final APList oApList;
-	private final List<MealyState> states;
+	protected int initState;
+	protected final APList iApList;
+	protected final List<State> states;
 	
-	public MealyMachine(APList iAps, APList oAps) {
-		this.iApList = iAps;
-		this.oApList = oAps;
+	public MachineBase(APList aps) {
+		this.iApList = aps;
 		this.states = new ArrayList<>();
 	}
 	
 	public APList getInAPs() {
 		return iApList;
-	}
-	
-	public APList getOutAPs() {
-		return oApList;
 	}
 	
 	public int getStateSize() {
@@ -51,13 +44,13 @@ public class MealyMachine {
 		initState = state;
 	}
 	
-	public MealyState createState() {
-		MealyState state = new MealyState(this, states.size());
+	public State createState() {
+		State state = this.makeState(states.size());
 		states.add(state);
 		return state;
 	}
 	
-	public MealyState getState(int state) {
+	public State getState(int state) {
 		assert state < states.size();
 		return states.get(state);
 	}
@@ -66,32 +59,8 @@ public class MealyMachine {
 		return initState;
 	}
 	
-	public int run(Word word) {
-		int stateNr = getSuccessor(initState, word.getPrefix(word.length() - 1));
-		return getState(stateNr).getOutput(word.getLastLetter());
-	}
-	
-	public int getSuccessor(int state, int letter) {
-		assert state < states.size() && letter < iApList.size();
-		return getState(state).getSuccessor(letter);
-	}
-	
-	public int getSuccessor(Word word) {
-		return getSuccessor(initState, word);
-	}
-	
-	public int getSuccessor(int state, Word word) {
-		int s = state;
-		for(int letterNr = 0; letterNr < word.length(); letterNr ++) {
-			s = getSuccessor(s, word.getLetter(letterNr));
-		}
-		return s;
-	}
-	
 	public String toString() {
 		return MachineExporterDOT.toString(this);
 	}
-	
-	
 
 }

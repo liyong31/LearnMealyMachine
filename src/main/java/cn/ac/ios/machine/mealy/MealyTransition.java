@@ -14,16 +14,25 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.machine;
+package cn.ac.ios.machine.mealy;
 
-import java.util.BitSet;
+import cn.ac.ios.machine.TransitionBase;
 
-public interface Acceptance {
+class MealyTransition extends TransitionBase {
+
+	private int output;
 	
-	boolean isFinal(int state);
+	public MealyTransition(int successor, int output) {
+		super(successor);
+		this.output = output;
+	}
 	
-	BitSet getFinals();
+	public int getOutput() {
+		return output;
+	}
 	
-	void setFinal(int state);
+	public void setOutput(int output) {
+		this.output = output;
+	}
 
 }

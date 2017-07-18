@@ -14,27 +14,26 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.mealy;
+package cn.ac.ios.machine.dfa;
 
-public class MealyTransition {
-	private final int successor;
-	private int output;
+import cn.ac.ios.machine.StateBase;
+
+class DFAState extends StateBase {
 	
-	public MealyTransition(int successor, int output) {
-		this.successor = successor;
-		this.output = output;
+	public DFAState(DFA machine, int index) {
+		super(machine, index);
 	}
 	
-	public int getSuccessor() {
-		return successor;
+	@Override
+	public void addOutput(int letter, int output) {
+		assert false : "Not supported in DFA";
 	}
 	
-	public int getOutput() {
-		return output;
-	}
 	
-	public void setOutput(int output) {
-		this.output = output;
+	@Override
+	public int getOutput(int letter) {
+		assert false : "Not supported in DFA";
+		return -1;
 	}
 
 }

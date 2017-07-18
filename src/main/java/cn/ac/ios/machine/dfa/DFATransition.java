@@ -14,16 +14,26 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.machine;
+package cn.ac.ios.machine.dfa;
 
-import java.util.BitSet;
+import cn.ac.ios.machine.TransitionBase;
 
-public interface Acceptance {
-	
-	boolean isFinal(int state);
-	
-	BitSet getFinals();
-	
-	void setFinal(int state);
+class DFATransition extends TransitionBase {
+
+	public DFATransition(int successor) {
+		super(successor);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public int getOutput() {
+		assert false : "Not supported in DFA";
+		return -1;
+	}
+
+	@Override
+	public void setOutput(int out) {
+		assert false : "Not supported in DFA";
+	}
 
 }

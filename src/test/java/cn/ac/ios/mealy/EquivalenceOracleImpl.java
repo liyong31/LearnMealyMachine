@@ -15,6 +15,7 @@
 
 package cn.ac.ios.mealy;
 
+import cn.ac.ios.machine.mealy.MealyMachine;
 import cn.ac.ios.oracle.EquivalenceOracle;
 
 public class EquivalenceOracleImpl implements EquivalenceOracle<MealyMachine, Boolean>{

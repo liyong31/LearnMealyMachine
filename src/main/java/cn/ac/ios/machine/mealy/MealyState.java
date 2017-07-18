@@ -14,58 +14,27 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.mealy;
+package cn.ac.ios.machine.mealy;
 
-public class MealyState {
-	
-	private final int index;
-	private final MealyMachine machine;
-	private final MealyTransition[] trans;
+import cn.ac.ios.machine.StateBase;
+import cn.ac.ios.machine.Transition;
+
+class MealyState extends StateBase {
 	
 	public MealyState(MealyMachine machine, int index) {
-		this.machine = machine;
-		this.index = index;
-		this.trans = new MealyTransition[machine.getInAPs().size()];
-	}
-	
-	public MealyMachine getMachine() {
-		return machine;
-	}
-	
-	public int getIndex() {
-		return index;
-	}
-	
-	public void addTransition(int letter, int state, int out) {
-		assert letter < trans.length;
-		MealyTransition tr = trans[letter];
-		if(tr == null) {
-			tr = new MealyTransition(state, out);
-		}
-		trans[letter] = tr;
-	}
-	
-	public void addTransition(int letter, int state) {
-		addTransition(letter, state, -1);
+		super(machine, index);
 	}
 	
 	public void addOutput(int letter, int output) {
-		MealyTransition tr = trans[letter];
+		Transition tr = trans[letter];
 		assert tr != null;
 		tr.setOutput(output);
 	}
 	
-	public int getSuccessor(int letter) {
-		MealyTransition tr = trans[letter];
-		assert tr != null;
-		return tr.getSuccessor();
-	}
-	
 	public int getOutput(int letter) {
-		MealyTransition tr = trans[letter];
+		Transition tr = trans[letter];
 		assert tr != null;
 		return tr.getOutput();
 	}
-	
 
 }
