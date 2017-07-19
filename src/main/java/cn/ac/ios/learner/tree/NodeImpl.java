@@ -14,18 +14,43 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.learner;
+package cn.ac.ios.learner.tree;
 
-public enum LearnerType {
-	
-	DFA_TABLE,
-	
-	DFA_TREE,
-	
-	MEALY_TABLE,
-	
-	FDFA
-	
-	
 
+import cn.ac.ios.table.ExprValue;
+import cn.ac.ios.table.HashableValue;
+import cn.ac.ios.tree.Node;
+import cn.ac.ios.tree.NodeAbstract;
+import cn.ac.ios.words.Word;
+
+public class NodeImpl extends NodeAbstract <ValueNode> {
+
+	public NodeImpl(Node<ValueNode> parent, HashableValue branch, ExprValue exprValue) {
+		super(parent, branch, exprValue);
+	}
+
+	private boolean isAccepting = false;
+
+	@Override
+	public void setAcceting() {
+		isAccepting = true;
+	}
+
+	@Override
+	public boolean isAccepting() {
+		return isAccepting;
+	} 
+	
+	public Node<ValueNode> getLeftNode() {
+		return null;
+	}
+	
+	public Node<ValueNode> getRightNode() {
+		return null;
+	}
+	
+	public String toString() {
+		Word label = getLabel().get();  
+		return label.toStringWithAlphabet() + ":" + isLeaf() + ":" + getDepth();
+	}
 }

@@ -14,18 +14,36 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.learner;
 
-public enum LearnerType {
-	
-	DFA_TABLE,
-	
-	DFA_TREE,
-	
-	MEALY_TABLE,
-	
-	FDFA
-	
-	
+package cn.ac.ios.tree;
 
+import cn.ac.ios.table.HashableValue;
+
+/** not only keeps the information of LCA, 
+ * but also store the branching information
+ *  */
+public class LCA<V> {
+	
+	public Node<V> commonAncestor;
+	public HashableValue firstBranch;
+	public HashableValue secondBranch;
+	public Node<V> firstChild;
+	public Node<V> secondChild;
+	
+	public LCA() {
+		
+	}
+	
+	public void setChild(boolean first, Node<V> child, HashableValue branch) {
+		assert child != null && branch != null;
+		if(first) {
+			firstChild = child;
+			firstBranch = branch;
+		}else {
+			secondChild = child;
+			secondBranch = branch;
+		}
+		
+	}
+	
 }

@@ -22,7 +22,7 @@ import java.util.List;
 import cn.ac.ios.words.Word;
 
 import cn.ac.ios.learner.LearnerType;
-import cn.ac.ios.learner.table.LearnerTable;
+import cn.ac.ios.learner.table.dfa.LearnerDFATable;
 import cn.ac.ios.machine.State;
 import cn.ac.ios.machine.mealy.MealyMachine;
 import cn.ac.ios.oracle.MembershipOracle;
@@ -36,7 +36,7 @@ import cn.ac.ios.table.ObservationTableAbstract;
 import cn.ac.ios.words.Alphabet;
 
 //TODO later we should support totally output alphabets
-public class LearnerMealyTable extends LearnerTable {
+public class LearnerMealyTable extends LearnerDFATable {
 	private final Alphabet outAps;
 
 	public LearnerMealyTable(Alphabet inAps, Alphabet outAps, MembershipOracle<HashableValue> membershipOracle) {
@@ -50,11 +50,11 @@ public class LearnerMealyTable extends LearnerTable {
 	}
 	
 	
-	protected void initializeTable() {
+	protected void initialize() {
 		// first upper table empty word
 		observationTable.addUpperRow(inAps.getEmptyWord());
 		// then lower table
-		for(int letterNr = 0; letterNr < inAps.getAPs().size(); letterNr ++) {
+		for(int letterNr = 0; letterNr < inAps.getAPSize(); letterNr ++) {
 			observationTable.addLowerRow(inAps.getLetterWord(letterNr));
 		}
 		makeTableClosed();
@@ -99,11 +99,10 @@ public class LearnerMealyTable extends LearnerTable {
 		for(int rowNr = 0; rowNr < upperTable.size(); rowNr ++) {
 			machine.createState();
 		}
-		// add states one by one, ordered by the order of occurences
-		// and should in a increased order, maybe change this later
+
 		for(int rowNr = 0; rowNr < upperTable.size(); rowNr ++) {
 			State state = machine.getState(rowNr);
-			for(int letter = 0; letter < inAps.getAPs().size(); letter ++) {
+			for(int letter = 0; letter < inAps.getAPSize(); letter ++) {
 				int succ = getSuccessorRow(rowNr, letter);
 				//TODO reuse the result from this.machine
 				// unless membership query is expensive otherwise I will not

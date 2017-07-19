@@ -73,8 +73,8 @@ public class DFARandomTest {
 				System.out.println(model.toString());
 				break;
 			}
-			HashableValue val = teacher.answerMembershipQuery(ceQuery);
-			ceQuery.answerQuery(val);
+//			HashableValue val = teacher.answerMembershipQuery(ceQuery);
+//			ceQuery.answerQuery(val);
 			learner.refineHypothesis(ceQuery);
 		}
 		

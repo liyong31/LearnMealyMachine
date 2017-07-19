@@ -33,6 +33,10 @@ public final class Alphabet {
 		return apList;
 	}
 	
+	public int getAPSize() {
+		return apList.size();
+	}
+	
 	public Word getEmptyWord() {
 		return epsilon;
 	}

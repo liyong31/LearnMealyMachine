@@ -14,18 +14,37 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.learner;
+package cn.ac.ios.learner.tree;
 
-public enum LearnerType {
+import cn.ac.ios.tree.Node;
+import cn.ac.ios.tree.Tree;
+import cn.ac.ios.tree.TreeBinaryExpoterDOT;
+
+public class TreeImpl implements Tree<ValueNode> {
+
+
+	private final Node<ValueNode> root;
+	private Node<ValueNode> leafLambda;
 	
-	DFA_TABLE,
+	public TreeImpl(Node<ValueNode> root) {
+		this.root = root;
+	}
 	
-	DFA_TREE,
+	public void setLamdaLeaf(Node<ValueNode> lamda) {
+		this.leafLambda = lamda;
+	}
 	
-	MEALY_TABLE,
+	protected Node<ValueNode> getLamdaLeaf() {
+		return leafLambda;
+	}
+
+	@Override
+	public Node<ValueNode> getRoot() {
+		return root;
+	}
 	
-	FDFA
-	
-	
+	public String toString() {
+		return TreeBinaryExpoterDOT.toString(this);
+	}
 
 }

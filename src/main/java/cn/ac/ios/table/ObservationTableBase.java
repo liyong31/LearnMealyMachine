@@ -17,7 +17,6 @@
 package cn.ac.ios.table;
 
 import java.io.ByteArrayOutputStream;
-import java.util.List;
 
 import cn.ac.ios.words.Word;
 

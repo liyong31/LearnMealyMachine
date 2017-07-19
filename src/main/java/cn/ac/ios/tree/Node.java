@@ -14,18 +14,54 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.learner;
 
-public enum LearnerType {
+package cn.ac.ios.tree;
+
+import java.util.Collection;
+
+import cn.ac.ios.table.ExprValue;
+import cn.ac.ios.table.HashableValue;
+
+/**
+ * Node of tree:
+ * V is the key used to get the child node
+ * ExprValue is the experiment to distinguish different nodes
+ * */
+public interface Node<V> {
 	
-	DFA_TABLE,
+	//gets
+	Node<V> getParent();
+	ExprValue getLabel();
+	Collection<Node<V>> getChildren();
+	Node<V> getChild(HashableValue value);
+	V getValue();	
+	HashableValue fromBranch();
+	// specially for binary tree
+	default Node<V> getLeftNode() {
+		return null;
+	}
 	
-	DFA_TREE,
+	default Node<V> getRightNode() {
+		return null;
+	}
 	
-	MEALY_TABLE,
+	int getDepth();
+
+	//sets
+	void setValue(V v);
+	void addChild(HashableValue v, Node<V> n);
+	void setAcceting();
+	//public void setLabel(ExprValue v); should be final once it has been instantiated
 	
-	FDFA
+	//tests
+	default boolean isRoot() {
+		return getParent() == null;
+	}
 	
-	
+	default boolean isLeaf() {
+		return getChildren().isEmpty();
+	}
+	//boolean equals(Object obj);
+	boolean isAccepting();
 
 }
