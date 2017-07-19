@@ -30,16 +30,22 @@ public class DFARandomTest {
 	
 	public static void main(String[] args) {
 		
+		if(args.length < 2) {
+			System.out.println("Usage: <PROGRAM> <NUM_OF_CASES> <NUM_OF_STATES_FOR_CASE>");
+			System.exit(0);
+		}
+		
 		Alphabet input = new Alphabet(String.class);
 		input.addLetter("a");
 		input.addLetter("b");
 		input.addLetter("c");
 		
-		int numCases = 5;
+		int numCases = Integer.parseInt(args[0]);
+		int numStates = Integer.parseInt(args[1]);
 		int numOK = 0;
 		
 		for(int i = 0; i < numCases; i ++) {
-			Machine machine = getRandomAutomaton(input, 6);
+			Machine machine = getRandomAutomaton(input, numStates);
 			System.out.println("Case " + i );
 			System.out.println(machine.toString());
 			if(testLearnerDFA(machine, input)) {
