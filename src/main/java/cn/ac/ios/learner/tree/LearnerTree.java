@@ -25,6 +25,7 @@ import cn.ac.ios.learner.LearnerMachine;
 import cn.ac.ios.machine.Machine;
 import cn.ac.ios.machine.State;
 import cn.ac.ios.machine.dfa.DFA;
+
 import cn.ac.ios.oracle.MembershipOracle;
 import cn.ac.ios.query.Query;
 import cn.ac.ios.query.QuerySimple;
@@ -52,7 +53,7 @@ public abstract class LearnerTree extends LearnerMachine {
 		Node<ValueNode> root = getValueNode(null, null, label);  
 		tree = new TreeImpl(root);
 		tree.setLamdaLeaf(root);
-		HashableValue result = processMembershipQuery(wordEmpty, wordEmpty);;
+
 		states.clear();
 		ValueNode stateLamda = new ValueNode(states.size(), wordEmpty);
 		states.add(stateLamda);    // add it to states list
@@ -137,14 +138,7 @@ public abstract class LearnerTree extends LearnerMachine {
 		}
 		
 	}
-	
-//	/**
-//	 * For regular language, just return counterexample word
-//	 * For Omega language:
-//	 *    1> leading automaton , will be a pair (x, y)
-//	 *    2> progress automaton , will be a counterexample word
-//	 **/
-//	protected abstract ExprValue getCounterExampleWord(Query<Boolean> query);
+
 
 	@Override
 	public void refineHypothesis(Query<HashableValue> query) {
@@ -260,6 +254,11 @@ public abstract class LearnerTree extends LearnerMachine {
 		
 	}
 	
+	@Override
+	public Word getStateLabel(int state) {
+		return states.get(state).label;
+	}
+	
 	protected void updateTransition(int from, int letter, int to) {
 		assert from < states.size() 
 		    && to < states.size() 
@@ -288,8 +287,58 @@ public abstract class LearnerTree extends LearnerMachine {
 		}
 		
 		// find prefix whose successor needs to be added
+		@Override
 		public void analyze() {
+			boolean isAcc = result.get();
+			this.leafBranch = getHashableValueBoolean(isAcc);
+			this.nodePrevBranch = getHashableValueBoolean(!isAcc);
+			// only has one leaf
+			if(tree.getRoot().isLeaf()) {
+				this.wordExpr = getExprValueWord(inAps.getEmptyWord());
+				this.nodePrev = tree.getRoot();
+				this.wordLeaf = getExprValueWord(exprValue.get());
+				return ;
+			}
 			
+			Word wordCE = this.exprValue.get();
+			// get the initial state from automaton
+			int letterNr = 0, stateCurr = -1, statePrev = machine.getInitialState();
+			
+			// binary search, low and high are the lengths of prefix
+			int low = 0, high = wordCE.length() - 1;
+			while (low <= high) {
+
+				int mid = (low + high) / 2;
+
+				assert mid < wordCE.length();
+
+				int sI = machine.getSuccessor(wordCE.getPrefix(mid));
+				int sJ = machine.getSuccessor(sI, wordCE.getLetter(mid));
+
+				Word sILabel = getStateLabel(sI);
+				Word sJLabel = getStateLabel(sJ);
+
+				HashableValue memSIAV = processMembershipQuery(sILabel, wordCE.getSuffix(mid));
+				HashableValue memSJV = processMembershipQuery(sJLabel, wordCE.getSuffix(mid + 1));
+
+				if (! memSIAV.valueEqual(memSJV)) {
+					statePrev = sI;
+					letterNr = mid;
+					stateCurr = sJ;
+					break;
+				}
+
+				if (memSIAV.valueEqual(result)) {
+					low = mid + 1;
+				} else {
+					high = mid;
+				}
+			}
+			
+			Word wordPrev = states.get(statePrev).label;         // S(j-1)
+			this.wordExpr = getExprValueWord(wordCE.getSuffix(letterNr + 1));  // y[j+1..n]
+			this.wordLeaf = getExprValueWord(wordPrev.append(wordCE.getLetter(letterNr))); // S(j-1)y[j]
+			this.nodePrev = states.get(stateCurr).node;          // S(j)
 		}
 		
 		public ExprValue getNodeLeaf() {
