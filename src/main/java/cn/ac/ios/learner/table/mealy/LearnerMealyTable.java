@@ -106,6 +106,8 @@ public class LearnerMealyTable extends LearnerTable {
 			for(int letter = 0; letter < inAps.getAPs().size(); letter ++) {
 				int succ = getSuccessorRow(rowNr, letter);
 				//TODO reuse the result from this.machine
+				// unless membership query is expensive otherwise I will not
+				// try to improve this part
 				int out = getOutput(upperTable.get(rowNr).getWord().append(letter)).get();
 				state.addTransition(letter, succ, out);
 			}
