@@ -31,17 +31,20 @@ public class MachineExporterDOT {
         PrintStream out = new PrintStream(stream);
 
         if(machine instanceof MealyMachine) out.println("// Mealy Machine");
-        else out.print("// DFA");
+        else out.println("// DFA");
         out.println("digraph {");
         int startNode = machine.getStateSize();
         for (int node = 0; node < machine.getStateSize(); node++) {
             out.print("  " + node + " [label=\"" + node + "\"");
+            boolean dc = false;
             if((machine instanceof DFA)){
             	DFA dfa = (DFA)machine;
             	if(dfa.getAcceptance().isFinal(node)) {
-            		out.print(", shape = doublecircle ]; \n");
+            		dc = true;
             	}
-            }else out.print(", shape = circle ]; \n");
+            }
+            if(dc) out.print(", shape = doublecircle ]; \n");
+            else out.print(", shape = circle ]; \n");
         }	
         out.println("  " + startNode + " [label=\"\", shape = plaintext];");
         out.println();

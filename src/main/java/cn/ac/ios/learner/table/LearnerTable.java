@@ -10,6 +10,7 @@ import cn.ac.ios.machine.State;
 import cn.ac.ios.machine.dfa.DFA;
 import cn.ac.ios.oracle.MembershipOracle;
 import cn.ac.ios.query.Query;
+import cn.ac.ios.query.QuerySimple;
 import cn.ac.ios.table.ExprValue;
 import cn.ac.ios.table.ExprValueWord;
 import cn.ac.ios.table.HashableValue;
@@ -53,7 +54,18 @@ public abstract class LearnerTable implements Learner<Machine, HashableValue> {
 		return new ExprValueWord(word);
 	}
 		
-	protected abstract Query<HashableValue> processMembershipQuery(ObservationRow row, int offset, ExprValue valueExpr);
+	protected Query<HashableValue> processMembershipQuery(ObservationRow row, int offset, ExprValue valueExpr) {
+		Query<HashableValue> query = new QuerySimple<>(row, row.getWord(), valueExpr.get(), offset);
+		HashableValue result = membershipOracle.answerMembershipQuery(query);
+		Query<HashableValue> queryResult = new QuerySimple<>(row, row.getWord(), valueExpr.get(), offset);
+		queryResult.answerQuery(result);
+		return queryResult;
+	}
+	
+	protected HashableValue processMembershipQuery(Word prefix, Word suffix) {
+		Query<HashableValue> query = new QuerySimple<>(null, prefix, suffix, -1);
+		return membershipOracle.answerMembershipQuery(query);
+	}
 	
 	protected void initializeTable() {
 		
@@ -222,10 +234,12 @@ public abstract class LearnerTable implements Learner<Machine, HashableValue> {
 		return observationTable.getUpperTable().get(state).getWord();
 	}
 	
-	protected abstract CeAnalyzer getCeAnalyzerInstance(ExprValue exprValue, HashableValue result);
+	protected CeAnalyzer getCeAnalyzerInstance(ExprValue exprValue, HashableValue result) {
+		return new CeAnalyzer(exprValue, result);
+	}
 	
 	// counter example analysis
-	protected abstract class CeAnalyzer {
+	protected class CeAnalyzer {
 		protected ExprValue column;
 		protected final ExprValue exprValue; 
 		protected final HashableValue result;
@@ -235,10 +249,42 @@ public abstract class LearnerTable implements Learner<Machine, HashableValue> {
 			this.result = result;
 		}
 		
-		public abstract void analyze();
-		
 		public ExprValue getNewColumn() {
 			return column;
+		}
+		
+		
+		public void analyze() {
+			
+			Word wordCE = exprValue.get();
+			int low = 0, high = wordCE.length() - 1;
+			while(low <= high) {
+				
+				int mid = (low + high) / 2;
+				
+				assert mid < wordCE.length();
+
+				int s = machine.getSuccessor(wordCE.getPrefix(mid));
+				int t = machine.getSuccessor(s, wordCE.getLetter(mid));
+				
+				Word sLabel = observationTable.getUpperTable().get(s).getWord();
+				Word tLabel = observationTable.getUpperTable().get(t).getWord();
+									
+				HashableValue memS = processMembershipQuery(sLabel, wordCE.getSuffix(mid));
+				HashableValue memT = processMembershipQuery(tLabel, wordCE.getSuffix(mid + 1));
+				
+				if (! memS.valueEqual(memT)) {
+					column = getExprValueWord(wordCE.getSuffix(mid + 1));
+					break;
+				}
+
+				if (memS.valueEqual(result)) {
+					low = mid + 1;
+				} else {
+					high = mid;
+				}
+			}
+			
 		}
 	
 	}

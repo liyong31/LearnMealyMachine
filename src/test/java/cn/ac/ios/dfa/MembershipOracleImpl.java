@@ -13,17 +13,33 @@
 
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
+package cn.ac.ios.dfa;
 
-package cn.ac.ios.learner;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
-public enum LearnerType {
+import cn.ac.ios.mealy.InputHelper;
+import cn.ac.ios.oracle.MembershipOracle;
+import cn.ac.ios.query.Query;
+import cn.ac.ios.table.HashableValue;
+import cn.ac.ios.table.HashableValueBoolean;
+import cn.ac.ios.table.HashableValueInt;
+import cn.ac.ios.words.Alphabet;
+import cn.ac.ios.words.Word;
+
+public class MembershipOracleImpl implements MembershipOracle<HashableValue> {
 	
-	DFA_TABLE,
-	
-	MEALY_TABLE,
-	
-	FDFA
-	
-	
+	public MembershipOracleImpl() {
+	}
+
+	@Override
+	public HashableValue answerMembershipQuery(Query<HashableValue> query) {
+		Word queriedWord = query.getQueriedWord();
+		System.out.println("Is the word " + queriedWord.toStringWithAlphabet() + " in the unknown languge?: 1/0");
+		boolean answer = false;
+		answer = InputHelper.getInputAnswer();
+		return new HashableValueBoolean(answer);
+	}
 
 }

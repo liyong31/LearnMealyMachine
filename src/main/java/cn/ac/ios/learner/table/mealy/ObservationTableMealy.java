@@ -16,19 +16,11 @@
 
 package cn.ac.ios.learner.table.mealy;
 
-import cn.ac.ios.table.ExprValueWord;
-import cn.ac.ios.table.HashableValueInt;
-import cn.ac.ios.table.ObservationRowBase;
 import cn.ac.ios.table.ObservationTableBase;
-import cn.ac.ios.words.Word;
 
 public class ObservationTableMealy extends ObservationTableBase {
-
-	protected HashableValueInt getHashableValueInt(int value) {
-		return new HashableValueInt(value);
-	}
 	
-	protected int addColumn(Word word) {
-		return addColumn(new ExprValueWord(word));
+	public ObservationTableMealy() {
+		super();
 	}
 }
