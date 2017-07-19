@@ -18,7 +18,9 @@ package cn.ac.ios.dfa;
 
 import java.util.Random;
 
+import cn.ac.ios.learner.Learner;
 import cn.ac.ios.learner.table.dfa.LearnerDFATable;
+import cn.ac.ios.learner.tree.dfa.LearnerDFATree;
 import cn.ac.ios.machine.Machine;
 import cn.ac.ios.machine.State;
 import cn.ac.ios.machine.dfa.DFA;
@@ -30,25 +32,28 @@ public class DFARandomTest {
 	
 	public static void main(String[] args) {
 		
-		if(args.length < 2) {
-			System.out.println("Usage: <PROGRAM> <NUM_OF_CASES> <NUM_OF_STATES_FOR_CASE>");
+		if(args.length < 3) {
+			System.out.println("Usage: <PROGRAM> <table|tree> <NUM_OF_CASES> <NUM_OF_STATES_FOR_CASE>");
 			System.exit(0);
 		}
+		
+		boolean table = true;
+		if(args[0].equals("tree")) table = false;
 		
 		Alphabet input = new Alphabet(String.class);
 		input.addLetter("a");
 		input.addLetter("b");
 		input.addLetter("c");
 		
-		int numCases = Integer.parseInt(args[0]);
-		int numStates = Integer.parseInt(args[1]);
+		int numCases = Integer.parseInt(args[1]);
+		int numStates = Integer.parseInt(args[2]);
 		int numOK = 0;
 		
 		for(int i = 0; i < numCases; i ++) {
 			Machine machine = getRandomAutomaton(input, numStates);
 			System.out.println("Case " + i );
 			System.out.println(machine.toString());
-			if(testLearnerDFA(machine, input)) {
+			if(testLearnerDFA(machine, input, table)) {
 				numOK ++;
 			}
 		}
@@ -57,9 +62,11 @@ public class DFARandomTest {
 		
 	}
 	
-	private static boolean testLearnerDFA(Machine machine, Alphabet alphabet) {
+	private static boolean testLearnerDFA(Machine machine, Alphabet alphabet, boolean table) {
 		TeacherDK teacher = new TeacherDK(machine, alphabet);
-		LearnerDFATable learner = new LearnerDFATable(alphabet, teacher);
+		Learner<Machine, HashableValue> learner = null;
+		if(table) learner = new LearnerDFATable(alphabet, teacher);
+		else learner = new LearnerDFATree(alphabet, teacher);
 		System.out.println("starting learning");
 		learner.startLearning();
 
