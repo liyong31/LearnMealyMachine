@@ -78,6 +78,8 @@ public abstract class ObservationTableBase extends ObservationTableAbstract {
 		return row;
 	}
 	
-	public abstract ObservationRowBase getRowInstance(Word word);
+	public ObservationRowBase getRowInstance(Word word) {
+		return new ObservationRowBase(word);
+	}
 
 }

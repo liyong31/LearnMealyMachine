@@ -45,6 +45,13 @@ public abstract class LearnerTable implements Learner<Machine, HashableValue> {
 		alreadyStarted = true;
 		initializeTable();
 	}
+	
+	protected ExprValue getCounterExampleWord(Query<HashableValue> query) {
+		assert query != null;
+		Word word = query.getQueriedWord();
+		assert word != null;
+		return new ExprValueWord(word);
+	}
 		
 	protected abstract Query<HashableValue> processMembershipQuery(ObservationRow row, int offset, ExprValue valueExpr);
 	
@@ -54,6 +61,7 @@ public abstract class LearnerTable implements Learner<Machine, HashableValue> {
 		observationTable.addUpperRow(wordEmpty);
 		ExprValue exprValue = getExprValueWord(wordEmpty);
 		
+		// add empty word column
 		observationTable.addColumn(exprValue);
 		// add every alphabet
 		for(int letterNr = 0; letterNr < inAps.getAPs().size(); letterNr ++) {
@@ -120,14 +128,12 @@ public abstract class LearnerTable implements Learner<Machine, HashableValue> {
 		constructHypothesis();
 	}
 	
-	protected abstract ExprValue getCounterExampleWord(Query<HashableValue> query);
-
     // return counter example for hypothesis
 	@Override
 	public void refineHypothesis(Query<HashableValue> ceQuery) {
 		
 		ExprValue exprValue = getCounterExampleWord(ceQuery);
-		CeAnalyzer analyzer = getCeAnalyzerInstance(exprValue);
+		CeAnalyzer analyzer = getCeAnalyzerInstance(exprValue, ceQuery.getQueryAnswer());
 		analyzer.analyze();
 		observationTable.addColumn(analyzer.getNewColumn()); // add new experiment
 		processMembershipQueries(observationTable.getUpperTable(), observationTable.getColumns().size() - 1, 1);
@@ -142,9 +148,10 @@ public abstract class LearnerTable implements Learner<Machine, HashableValue> {
 		return machine;
 	}
 	
+	// Default learner for DFA
 	protected void constructHypothesis() {
 		
-		Machine machine = new DFA(inAps.getAPs());
+		machine = new DFA(inAps.getAPs());
 		
 		List<ObservationRow> upperTable = observationTable.getUpperTable();
 		
@@ -168,7 +175,6 @@ public abstract class LearnerTable implements Learner<Machine, HashableValue> {
 			}
 		}
 		
-		this.machine = machine;
 	}
 	
 	// a state is accepting iff it accepts empty language
@@ -216,15 +222,17 @@ public abstract class LearnerTable implements Learner<Machine, HashableValue> {
 		return observationTable.getUpperTable().get(state).getWord();
 	}
 	
-	protected abstract CeAnalyzer getCeAnalyzerInstance(ExprValue exprValue);
+	protected abstract CeAnalyzer getCeAnalyzerInstance(ExprValue exprValue, HashableValue result);
 	
 	// counter example analysis
 	protected abstract class CeAnalyzer {
 		protected ExprValue column;
 		protected final ExprValue exprValue; 
+		protected final HashableValue result;
 		
-		public CeAnalyzer(ExprValue exprValue) {
+		public CeAnalyzer(ExprValue exprValue, HashableValue result) {
 			this.exprValue = exprValue;
+			this.result = result;
 		}
 		
 		public abstract void analyze();

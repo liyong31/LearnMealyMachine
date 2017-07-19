@@ -14,21 +14,61 @@
 /* You should have received a copy of the GNU General Public License      */
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
-package cn.ac.ios.learner.table.mealy;
+package cn.ac.ios.table;
 
-import cn.ac.ios.table.ExprValueWord;
-import cn.ac.ios.table.HashableValueInt;
-import cn.ac.ios.table.ObservationRowBase;
-import cn.ac.ios.table.ObservationTableBase;
-import cn.ac.ios.words.Word;
+public class HashableValueBoolean implements HashableValue {
+	
+	private boolean value ;
+	
+	public HashableValueBoolean(boolean val) {
+		value = val;
+	}
 
-public class ObservationTableMealy extends ObservationTableBase {
+	@Override
+	public boolean valueEqual(HashableValue rvalue) {
+		return value == (Boolean)rvalue.get();
+	}
 
-	protected HashableValueInt getHashableValueInt(int value) {
-		return new HashableValueInt(value);
+	@SuppressWarnings("unchecked")
+	@Override
+	public Boolean get() {
+		return value;
 	}
 	
-	protected int addColumn(Word word) {
-		return addColumn(new ExprValueWord(word));
+	public boolean equals(Object obj) {
+		if(obj instanceof HashableValueBoolean) {
+			HashableValueBoolean row = (HashableValueBoolean)obj;
+			return valueEqual(row);
+		}
+		return false;
 	}
+	
+	public String toString() {
+		return value? "+" : "-";
+	}
+	
+	public int hashCode() {
+		return value? 0 : 1;
+	}
+
+	@Override
+	public boolean isPair() {
+		return false;
+	}
+
+	@Override
+	public <T> T getLeft() {
+		return null;
+	}
+
+	@Override
+	public <T> T getRight() {
+		return null;
+	}
+
+	@Override
+	public boolean isAccepting() {
+		return value;
+	}
+
 }
