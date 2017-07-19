@@ -15,7 +15,7 @@
 /* along with this program.  If not, see <http://www.gnu.org/licenses/>.  */
 
 package cn.ac.ios.machine;
-
+// only complete automaton is supported
 public abstract class StateBase implements State {
 	
 	protected final int index;
@@ -40,10 +40,11 @@ public abstract class StateBase implements State {
 	@Override
 	public void addTransition(int letter, int state, int out) {
 		assert letter < trans.length;
-		Transition tr = trans[letter];
-		if(tr == null) {
-			tr = machine.makeTransition(state, out);
-		}
+		// now allow to change the transition
+		Transition tr = machine.makeTransition(state, out);
+//		if(tr == null) {
+//			tr = machine.makeTransition(state, out);
+//		}
 		trans[letter] = tr;
 	}
 	

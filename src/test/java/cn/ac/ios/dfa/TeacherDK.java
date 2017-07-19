@@ -20,27 +20,69 @@ import cn.ac.ios.machine.Machine;
 import cn.ac.ios.oracle.EquivalenceOracle;
 import cn.ac.ios.oracle.MembershipOracle;
 import cn.ac.ios.query.Query;
+import cn.ac.ios.query.QuerySimple;
 import cn.ac.ios.table.HashableValue;
+import cn.ac.ios.table.HashableValueBoolean;
+import cn.ac.ios.util.UtilMachine;
+import cn.ac.ios.words.APList;
+import cn.ac.ios.words.Alphabet;
+import cn.ac.ios.words.Word;
 import dk.brics.automaton.Automaton;
 
 public class TeacherDK implements MembershipOracle<HashableValue>, EquivalenceOracle<Machine, Query<HashableValue>> {
 
-	private Automaton automaton;
+	private final Automaton automaton;
+	private final Machine machine;
+	private final Alphabet alphabet;
 	
-	public TeacherDK(Machine machine) {
+	public TeacherDK(Machine machine, Alphabet alphabet) {
+		this.automaton = UtilMachine.dfaToDkAutomaton(machine);
+		this.machine = machine;
+		this.alphabet = alphabet;
+	}
+	
+	private Word parseString(String counterexample) {
+		APList aps = machine.getInAPs();
+		String[] wordStr = counterexample.split("");
+		int[] wordArr = new int[wordStr.length];
 		
+		for(int letterNr = 0; letterNr < wordStr.length; letterNr ++) {
+			wordArr[letterNr] = aps.indexOf(wordStr[letterNr]);
+		}
+		
+		return alphabet.getArrayWord(wordArr);
 	}
 	
 	@Override
-	public Query<HashableValue> answerEquivalenceQuery(Machine automaton) {
-		// TODO Auto-generated method stub
-		return null;
+	public Query<HashableValue> answerEquivalenceQuery(Machine machine) {
+		
+		Automaton conjecture = UtilMachine.dfaToDkAutomaton(machine);
+		Automaton result = automaton.clone().minus(conjecture.clone());
+		String counterexample = result.getShortestExample(true);
+		Word wordCE = alphabet.getEmptyWord();
+		boolean isEq = true;
+		
+		if(counterexample == null) {
+			result = conjecture.clone().minus(automaton.clone());
+			counterexample = result.getShortestExample(true);
+		}
+		
+		if(counterexample != null) {
+			wordCE = parseString(counterexample);
+			isEq = false;
+		}
+		
+		
+		Query<HashableValue> ceQuery = new QuerySimple<>(wordCE);
+		ceQuery.answerQuery(new HashableValueBoolean(isEq));
+		return ceQuery;
 	}
 
 	@Override
 	public HashableValue answerMembershipQuery(Query<HashableValue> query) {
-		// TODO Auto-generated method stub
-		return null;
+		Word word = query.getQueriedWord();
+		boolean result = machine.runDFA(word);
+		return new HashableValueBoolean(result);
 	}
 	
 
