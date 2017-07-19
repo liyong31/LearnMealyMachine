@@ -85,7 +85,7 @@ public class DFARandomTest {
     	
     	Machine result = new DFA(alphabet.getAPs());
 
-		Random r = new Random();
+		Random r = new Random(System.currentTimeMillis());
 		
 		for(int i = 0; i < numState; i ++) {
 			result.createState();
