@@ -49,6 +49,7 @@ public class DFARandomTest {
 		int numStates = Integer.parseInt(args[2]);
 		int numOK = 0;
 		
+		long start = System.currentTimeMillis();
 		for(int i = 0; i < numCases; i ++) {
 			Machine machine = getRandomAutomaton(input, numStates);
 			System.out.println("Case " + i );
@@ -57,8 +58,9 @@ public class DFARandomTest {
 				numOK ++;
 			}
 		}
-		
-		System.out.println("Tested " + numCases + " cases and " + numOK + " cases passed !");
+		long end = System.currentTimeMillis();
+		System.out.println("Tested " + numCases + " cases and " + numOK + " cases passed in "
+						+ ((end-start) / 1000) + " secs !");
 		
 	}
 	

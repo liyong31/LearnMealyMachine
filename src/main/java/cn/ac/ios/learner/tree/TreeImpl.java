@@ -34,7 +34,7 @@ public class TreeImpl implements Tree<ValueNode> {
 		this.leafLambda = lamda;
 	}
 	
-	protected Node<ValueNode> getLamdaLeaf() {
+	public Node<ValueNode> getLamdaLeaf() {
 		return leafLambda;
 	}
 

@@ -16,7 +16,9 @@
 
 package cn.ac.ios.mealy;
 
+import cn.ac.ios.learner.Learner;
 import cn.ac.ios.learner.table.mealy.LearnerMealyTable;
+import cn.ac.ios.learner.tree.mealy.LearnerMealyTree;
 import cn.ac.ios.machine.Machine;
 import cn.ac.ios.machine.mealy.MealyMachine;
 import cn.ac.ios.oracle.EquivalenceOracle;
@@ -26,7 +28,7 @@ import cn.ac.ios.table.HashableValue;
 import cn.ac.ios.table.HashableValueInt;
 import cn.ac.ios.words.Alphabet;
 
-public class MealyTest {
+public class MealyTreeTest {
 	
 	public static void main(String[] args) {
 		
@@ -42,7 +44,7 @@ public class MealyTest {
         
 		MembershipOracle<HashableValue> membershipOracle = new MembershipOracleImpl(output);
 
-		LearnerMealyTable learner = new LearnerMealyTable(input, output, membershipOracle);
+		Learner<Machine, HashableValue> learner = new LearnerMealyTree(input, output, membershipOracle);
 		System.out.println("starting learning");
 		learner.startLearning();
 		boolean result = false;
@@ -50,19 +52,10 @@ public class MealyTest {
 			System.out.println("Table is both closed and consistent\n" + learner.toString());
 			
 			Machine model = learner.getHypothesis();
-//			System.out.println("automaton\n" + model.toString());
-			
-			Query<HashableValue> ceQuery = learner.makeTableConsistent();
-			
-			if(ceQuery != null) {
-				learner.refineHypothesis(ceQuery);
-				continue;
-			}
-			
 			EquivalenceOracle<Machine, Boolean> equivalenceOracle = new EquivalenceOracleImpl();
 			result = equivalenceOracle.answerEquivalenceQuery(model);
 			if(result == true) break;
-			ceQuery = InputHelper.getCeWord(input);
+			Query<HashableValue> ceQuery = InputHelper.getCeWord(input);
 //			System.out.println("What is the output of " + ceQuery.getQueriedWord().toStringWithAlphabet() + "?");
 //			int n = InputHelper.getInteger();
 //			ceQuery.answerQuery(new HashableValueInt(n));

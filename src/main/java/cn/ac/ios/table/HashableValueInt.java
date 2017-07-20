@@ -30,6 +30,15 @@ public class HashableValueInt implements HashableValue {
 		Integer rValue = rvalue.get(); 
 		return value == rValue.intValue();
 	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if(obj instanceof HashableValueInt) {
+			HashableValueInt val = (HashableValueInt)obj;
+			return val.value == value;
+		}
+		return false;
+	}
 
 	@SuppressWarnings("unchecked")
 	@Override
