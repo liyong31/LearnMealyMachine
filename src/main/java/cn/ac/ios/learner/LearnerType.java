@@ -24,6 +24,8 @@ public enum LearnerType {
 	
 	MEALY_TABLE,
 	
+	MEALY_TREE,
+	
 	FDFA
 	
 	
