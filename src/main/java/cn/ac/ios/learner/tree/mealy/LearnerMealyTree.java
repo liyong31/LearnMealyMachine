@@ -21,7 +21,6 @@ public class LearnerMealyTree extends LearnerDFATree {
 	
 	@Override
 	public LearnerType getLearnerType() {
-		// TODO Auto-generated method stub
 		return LearnerType.MEALY_TREE;
 	}
 
