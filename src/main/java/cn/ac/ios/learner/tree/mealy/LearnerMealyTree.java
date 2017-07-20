@@ -20,6 +20,7 @@ import cn.ac.ios.words.Alphabet;
 import cn.ac.ios.words.Word;
 import gnu.trove.iterator.TIntObjectIterator;
 
+// TODO align with makeTableClosed
 public class LearnerMealyTree extends LearnerDFATree {
 
 	private final Alphabet outAps;
