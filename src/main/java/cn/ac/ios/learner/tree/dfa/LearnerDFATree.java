@@ -14,7 +14,6 @@ public class LearnerDFATree extends LearnerTree {
 
 	@Override
 	public LearnerType getLearnerType() {
-		// TODO Auto-generated method stub
 		return LearnerType.DFA_TREE;
 	}
 

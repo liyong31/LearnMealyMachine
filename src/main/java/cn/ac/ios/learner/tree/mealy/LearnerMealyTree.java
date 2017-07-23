@@ -67,7 +67,7 @@ public class LearnerMealyTree extends LearnerDFATree {
 	// word will never be empty word
 	protected Node<ValueNode> updateTree(ExprValue exprValue, HashableValue result) { 
 		
-		CeAnalyzer analyzer = getCeAnalyzerInstance(exprValue, result);
+		CeAnalyzerMealyTree analyzer = getCeAnalyzerInstance(exprValue, result);
 		analyzer.analyze();
 		
 		// replace nodePrev with new experiment node nodeExpr 
@@ -240,12 +240,12 @@ public class LearnerMealyTree extends LearnerDFATree {
 	}
 	
 	@Override
-	protected CeAnalyzer getCeAnalyzerInstance(ExprValue exprValue, HashableValue result) {
+	protected CeAnalyzerMealyTree getCeAnalyzerInstance(ExprValue exprValue, HashableValue result) {
 		return new CeAnalyzerMealyTree(exprValue, result);
 	}
 		
 	// analyze counterexample
-	protected class CeAnalyzerMealyTree extends CeAnalyzer {
+	protected class CeAnalyzerMealyTree extends CeAnalyzerTree {
 		
 		protected Node<ValueNode> nodePrev = tree.getLamdaLeaf();
 		protected ExprValue wordExpr;

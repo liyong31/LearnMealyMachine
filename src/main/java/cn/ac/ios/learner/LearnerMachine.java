@@ -16,7 +16,6 @@
 
 package cn.ac.ios.learner;
 
-import cn.ac.ios.learner.tree.ValueNode;
 import cn.ac.ios.machine.Machine;
 import cn.ac.ios.oracle.MembershipOracle;
 import cn.ac.ios.query.Query;
@@ -25,7 +24,7 @@ import cn.ac.ios.table.ExprValue;
 import cn.ac.ios.table.ExprValueWord;
 import cn.ac.ios.table.HashableValue;
 import cn.ac.ios.table.HashableValueBoolean;
-import cn.ac.ios.tree.Node;
+
 import cn.ac.ios.words.Alphabet;
 import cn.ac.ios.words.Word;
 
@@ -138,17 +137,6 @@ public abstract class LearnerMachine implements Learner<Machine, HashableValue> 
 			}
 			
 		}
-		
-		// -------- for tree-based algorithm
-		public abstract ExprValue getNodeLeaf();
-		
-		public abstract ExprValue getNodeExpr();
-		
-		public abstract Node<ValueNode> getNodeToSplit();
-		
-		public abstract HashableValue getLeafBranch();
-		
-		public abstract HashableValue getNodeSplitBranch();
 	
 	}
 }

@@ -178,7 +178,7 @@ public abstract class LearnerTree extends LearnerMachine {
 	// word will never be empty word
 	protected Node<ValueNode> updateTree(ExprValue exprValue, HashableValue result) { 
 		
-		CeAnalyzer analyzer = getCeAnalyzerInstance(exprValue, result);
+		CeAnalyzerTree analyzer = getCeAnalyzerInstance(exprValue, result);
 		analyzer.analyze();
 		
 		// replace nodePrev with new experiment node nodeExpr 
@@ -269,7 +269,7 @@ public abstract class LearnerTree extends LearnerMachine {
 	}
 	
 	@Override
-	protected CeAnalyzer getCeAnalyzerInstance(ExprValue exprValue, HashableValue result) {
+	protected CeAnalyzerTree getCeAnalyzerInstance(ExprValue exprValue, HashableValue result) {
 		return new CeAnalyzerTree(exprValue, result);
 	}
 		

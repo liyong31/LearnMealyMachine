@@ -2,13 +2,11 @@ package cn.ac.ios.learner.table.dfa;
 
 import cn.ac.ios.learner.LearnerType;
 import cn.ac.ios.learner.table.LearnerTable;
-import cn.ac.ios.learner.tree.ValueNode;
 import cn.ac.ios.oracle.MembershipOracle;
 import cn.ac.ios.table.ExprValue;
 import cn.ac.ios.table.HashableValue;
-//import cn.ac.ios.table.HashableValueBoolean;
+
 import cn.ac.ios.table.ObservationTableAbstract;
-import cn.ac.ios.tree.Node;
 import cn.ac.ios.words.Alphabet;
 
 
@@ -38,37 +36,6 @@ public class LearnerDFATable extends LearnerTable {
 
 		public CeAnalyzerTable(ExprValue exprValue, HashableValue result) {
 			super(exprValue, result);
-			// TODO Auto-generated constructor stub
-		}
-
-		@Override
-		public ExprValue getNodeLeaf() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public ExprValue getNodeExpr() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public Node<ValueNode> getNodeToSplit() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public HashableValue getLeafBranch() {
-			// TODO Auto-generated method stub
-			return null;
-		}
-
-		@Override
-		public HashableValue getNodeSplitBranch() {
-			// TODO Auto-generated method stub
-			return null;
 		}
 	}
 	
