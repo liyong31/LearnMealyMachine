@@ -36,13 +36,30 @@ import cn.ac.ios.words.Alphabet;
 import cn.ac.ios.words.Word;
 import gnu.trove.iterator.TIntObjectIterator;
 
+/**
+ * Maler and Pnueli way to treat counterexample
+ * */
+
+// only apply to DFA
 public abstract class LearnerTree extends LearnerMachine {
-	
+
 	protected TreeImpl tree;
-	
+	// updates for tree
+    protected List<ValueNode> states;
+    
+    
 	public LearnerTree(Alphabet inAps,
 			MembershipOracle<HashableValue> membershipOracle) {
 		super(inAps, membershipOracle);
+		states = new ArrayList<>();
+	}
+	
+	private ValueNode createNode(Node<ValueNode> node) {
+		ValueNode valueNode = new ValueNode(states.size(), node.getLabel().get());
+		states.add(valueNode);
+		valueNode.node = node;
+		node.setValue(valueNode);
+		return valueNode;
 	}
 
 
@@ -51,16 +68,14 @@ public abstract class LearnerTree extends LearnerMachine {
 		Word wordEmpty = inAps.getEmptyWord();
 		ExprValue label = getExprValueWord(wordEmpty);
 		Node<ValueNode> root = getValueNode(null, null, label);  
+		states.clear();
+		// init empty state
+		ValueNode stateLamda = createNode(root);
+		
 		tree = new TreeImpl(root);
 		tree.setLamdaLeaf(root);
-
-		states.clear();
-		ValueNode stateLamda = new ValueNode(states.size(), wordEmpty);
-		states.add(stateLamda);    // add it to states list
-		stateLamda.node = root;    // relate to node
-		root.setValue(stateLamda); // update node value
 		
-		updateSuccessors(stateLamda.id, 0, inAps.getAPSize() - 1);
+		updatePredecessors(stateLamda.id, 0, inAps.getAPSize() - 1);
 		nodeToSplit = null;
 		constructHypothesis();
 	}
@@ -74,22 +89,26 @@ public abstract class LearnerTree extends LearnerMachine {
 	}
 	
 	protected void constructHypothesis() {
-
-//		// construct machine according to KV tree
+		// construct machine according to KV tree
 		if (nodeToSplit != null) {
 			updatePredecessors();
 		}
 		
 		Machine machine = new DFA(inAps.getAPs());
-		
 		for(int i = 0; i < states.size(); i ++) {
 			machine.createState();
 		}
 		
 		for(ValueNode state : states) {
-			State s = machine.getState(state.id);
 			for(int letter = 0; letter < inAps.getAPSize(); letter ++) {
-				s.addTransition(letter, state.getSuccessor(letter));
+				BitSet preds = state.predecessors.get(letter);
+				if(preds == null) continue;
+				for(int predNr = preds.nextSetBit(0)
+						; predNr >= 0
+						; predNr = preds.nextSetBit(predNr + 1)) {
+					State s = machine.getState(predNr);
+					s.addTransition(letter, state.id);
+				}
 			}
 			if(state.node.isAccepting()) {
 				machine.getAcceptance().setFinal(state.id);;
@@ -98,9 +117,7 @@ public abstract class LearnerTree extends LearnerMachine {
 				machine.setInitial(state.id);
 			}
 		}
-		
 		this.machine = machine;
-
 	}
 	
 	// needs to check , s <- a - t then t has a successor s 
@@ -108,7 +125,7 @@ public abstract class LearnerTree extends LearnerMachine {
 		
 		TIntObjectIterator<BitSet> iterator = nodeToSplit.getValue().predecessors.iterator();
 		Node<ValueNode> parent = nodeToSplit.getParent();
-		BitSet letterDeleted = new BitSet();
+		BitSet letterToDeleted = new BitSet();
 		while(iterator.hasNext()) {
 			iterator.advance();
 			int letter = iterator.key();
@@ -125,15 +142,15 @@ public abstract class LearnerTree extends LearnerMachine {
 				}
 			}
 			if(stateLeft.isEmpty()) {
-				letterDeleted.set(letter);
+				letterToDeleted.set(letter);
 			}else {
 				iterator.setValue(stateLeft);
 			}
 		}
 		
-		for(int letter = letterDeleted.nextSetBit(0)
+		for(int letter = letterToDeleted.nextSetBit(0)
 				; letter >= 0
-				; letter = letterDeleted.nextSetBit(letter + 1)) {
+				; letter = letterToDeleted.nextSetBit(letter + 1)) {
 			nodeToSplit.getValue().predecessors.remove(letter);
 		}
 		
@@ -153,9 +170,7 @@ public abstract class LearnerTree extends LearnerMachine {
 		return new NodeImpl(parent, branch, label);
 	}
 	
-	// updates for tree
-    protected List<ValueNode> states = new ArrayList<>();
-    
+
 	// get corresponding 
     protected Node<ValueNode> sift(Word word) {
  		return sift(word, tree.getRoot());
@@ -190,7 +205,8 @@ public abstract class LearnerTree extends LearnerMachine {
 		
 		// new experiment word
 		boolean rootChanged = false;
-		Node<ValueNode> nodeExpr = getValueNode(parent, nodePrev.fromBranch(), wordExpr); // replace nodePrev
+		// replace nodePrev
+		Node<ValueNode> nodeExpr = getValueNode(parent, nodePrev.fromBranch(), wordExpr); 
 		if(parent != null) {
 			parent.addChild(nodePrev.fromBranch(), nodeExpr);
 		}else { // became root node
@@ -202,10 +218,7 @@ public abstract class LearnerTree extends LearnerMachine {
 		HashableValue branchNodeLeaf = analyzer.getLeafBranch();
 		HashableValue branchNodePrev = analyzer.getNodeSplitBranch();
 		Node<ValueNode> nodeLeaf = getValueNode(nodeExpr, branchNodeLeaf, analyzer.getNodeLeaf());
-		ValueNode stateLeaf =  new ValueNode(states.size(), analyzer.getNodeLeaf().get());
-		stateLeaf.node = nodeLeaf;
-		nodeLeaf.setValue(stateLeaf);
-		states.add(stateLeaf); // add new state
+		ValueNode stateLeaf = createNode(nodeLeaf); 
 		
 		Node<ValueNode> nodePrevNew = getValueNode(nodeExpr, branchNodePrev, nodePrev.getLabel());
 		nodePrevNew.setValue(nodePrev.getValue()); // To update
@@ -215,13 +228,12 @@ public abstract class LearnerTree extends LearnerMachine {
 		nodeExpr.addChild(branchNodePrev, nodePrevNew);
 		
 		// update outgoing transitions for nodeLeaf
-		updateSuccessors(stateLeaf.id, 0, inAps.getAPSize() - 1);
+		updatePredecessors(stateLeaf.id, 0, inAps.getAPSize() - 1);
 				
 		// needs to be changed
 		if(rootChanged) {
 			if(! nodePrev.isAccepting()) nodeLeaf.setAcceting();
 			else nodePrevNew.setAcceting();
-			
 		}else {
 			if(nodePrev.isAccepting()) {
 				nodeLeaf.setAcceting();
@@ -238,20 +250,20 @@ public abstract class LearnerTree extends LearnerMachine {
 		return nodePrevNew;
 	}
 	
-	protected void updateSuccessors(int stateNr, int letterFrom, int letterTo) {
+	// update the information
+	protected void updatePredecessors(int stateNr, int from, int to) {
 		assert stateNr < states.size() 
-	    && letterFrom >= 0
-	    && letterTo < inAps.getAPSize();
+	    && from >= 0
+	    && to < inAps.getAPSize();
 		
 		ValueNode state = states.get(stateNr);
 		
 		Word label = state.label;
-		for(int letter = letterFrom; letter <= letterTo; letter ++) {
+		for(int letter = from; letter <= to; letter ++) {
 			Word wordSucc = label.append(letter);
 			Node<ValueNode> nodeSucc = sift(wordSucc);
 			updateTransition(stateNr, letter, nodeSucc.getValue().id);
 		}
-		
 	}
 	
 	@Override
@@ -263,8 +275,6 @@ public abstract class LearnerTree extends LearnerMachine {
 		assert from < states.size() 
 		    && to < states.size() 
 		    && letter < inAps.getAPSize();
-		
-		states.get(from).addSuccessor(letter, to);
 		states.get(to).addPredecessor(from, letter);
 	}
 	

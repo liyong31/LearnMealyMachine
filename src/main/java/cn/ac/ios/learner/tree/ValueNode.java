@@ -21,9 +21,7 @@ import java.util.BitSet;
 
 import cn.ac.ios.tree.Node;
 import cn.ac.ios.words.Word;
-import gnu.trove.map.TIntIntMap;
 import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntIntHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 /**
@@ -35,13 +33,11 @@ public class ValueNode {
 	public Node<ValueNode> node;
 	public final Word label;
 	public TIntObjectMap<BitSet> predecessors; // use more efficient way to store
-	public TIntIntMap successors;              // may be deleted later
 	
 	public ValueNode(int id, Word label) {
 		this.id = id;
 		this.label = label;
 		predecessors = new TIntObjectHashMap<>();
-		successors = new TIntIntHashMap();
 	}
 	
 	public void addPredecessor(int source, int letter) {
@@ -53,17 +49,6 @@ public class ValueNode {
 			states.set(source);
 			predecessors.put(letter, states);
 		}
-	}
-	
-	public void addSuccessor(int letter, int target) {
-		successors.put(letter, target);
-	}
-	
-	public int getSuccessor(int letter) {
-		if(successors.containsKey(letter)) 
-		  return successors.get(letter);
-		assert false : "no such letter key";
-		return -1;
 	}
 	
 	public String toString() {

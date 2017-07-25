@@ -23,7 +23,7 @@ import cn.ac.ios.tree.Node;
 import cn.ac.ios.tree.NodeAbstract;
 import cn.ac.ios.words.Word;
 
-public class NodeImpl extends NodeAbstract <ValueNode> {
+class NodeImpl extends NodeAbstract<ValueNode> {
 
 	public NodeImpl(Node<ValueNode> parent, HashableValue branch, ExprValue exprValue) {
 		super(parent, branch, exprValue);

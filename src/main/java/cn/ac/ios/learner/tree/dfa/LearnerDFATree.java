@@ -2,6 +2,7 @@ package cn.ac.ios.learner.tree.dfa;
 
 import cn.ac.ios.learner.LearnerType;
 import cn.ac.ios.learner.tree.LearnerTree;
+
 import cn.ac.ios.oracle.MembershipOracle;
 import cn.ac.ios.table.HashableValue;
 import cn.ac.ios.words.Alphabet;

@@ -3,7 +3,6 @@ package cn.ac.ios.learner.tree.mealy;
 import java.util.BitSet;
 
 import cn.ac.ios.learner.LearnerType;
-
 import cn.ac.ios.learner.tree.TreeImpl;
 import cn.ac.ios.learner.tree.ValueNode;
 import cn.ac.ios.learner.tree.dfa.LearnerDFATree;
@@ -48,11 +47,17 @@ public class LearnerMealyTree extends LearnerDFATree {
 		}
 		
 		for(ValueNode state : states) {
-			State s = machine.getState(state.id);
 			for(int letter = 0; letter < inAps.getAPSize(); letter ++) {
-				// get output
-				int out = processMembershipQuery(state.label.append(letter), inAps.getEmptyWord()).get();
-				s.addTransition(letter, state.getSuccessor(letter), out);
+				BitSet preds = state.predecessors.get(letter);
+				if(preds == null) continue;
+				for(int predNr = preds.nextSetBit(0)
+						; predNr >= 0
+						; predNr = preds.nextSetBit(predNr + 1)) {
+					State s = machine.getState(predNr);
+					// get output
+					int out = processMembershipQuery(state.label.append(letter), inAps.getEmptyWord()).get();
+					s.addTransition(letter, state.id, out);
+				}
 			}
 
 			if(state.label.isEmpty()) {
@@ -216,7 +221,7 @@ public class LearnerMealyTree extends LearnerDFATree {
 	}
 	
 	// may add new leaf node during successor update
-	@Override
+
 	protected void updateSuccessors(int stateNr, int letterFrom, int letterTo) {
 		assert stateNr < states.size() 
 	    && letterFrom >= 0
@@ -263,15 +268,6 @@ public class LearnerMealyTree extends LearnerDFATree {
 
 			this.leafBranch = null;
 			this.nodePrevBranch = null;
-			// only has one leaf
-//			if(tree.getRoot().isLeaf()) {
-//				this.wordExpr = getExprValueWord(inAps.getEmptyWord());
-//				this.nodePrev = tree.getRoot();
-//				this.leafBranch = result;
-//				this.nodePrevBranch = processMembershipQuery(tree.getRoot().getLabel().get(), inAps.getEmptyWord());
-//				this.wordLeaf = getExprValueWord(exprValue.get());
-//				return ;
-//			}
 			
 			Word wordCE = this.exprValue.get();
 			// get the initial state from automaton

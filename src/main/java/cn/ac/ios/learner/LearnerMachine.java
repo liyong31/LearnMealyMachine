@@ -28,7 +28,7 @@ import cn.ac.ios.table.HashableValueBoolean;
 import cn.ac.ios.words.Alphabet;
 import cn.ac.ios.words.Word;
 
-public abstract class LearnerMachine implements Learner<Machine, HashableValue> {
+public abstract class LearnerMachine extends LearnerBase<Machine> {
 	
 	protected final Alphabet inAps;
 	protected final MembershipOracle<HashableValue> membershipOracle;
