@@ -13,12 +13,7 @@ public class DFAGen {
 		
 	}
 	
-	public static Machine getRandomAutomaton(int apSize, int numState) {
-		
-		Alphabet ap = new Alphabet(String.class);
-		for(int i = 0; i < apSize; i ++) {
-			ap.addLetter("" + ((char)i));
-		}
+	public static Machine getRandomAutomaton(Alphabet ap, int numState) {
     	
     	Machine result = new DFA(ap.getAPs());
 

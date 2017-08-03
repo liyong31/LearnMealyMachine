@@ -10,6 +10,10 @@ import cn.ac.ios.words.Alphabet;
 
 public class DFALearnCompare {
 	
+	private static int numMemTable = 0;
+	private static int numMemTree = 0;
+	private static int numEqTable = 0;
+	private static int numEqTree = 0;
 	
 	private static long testLearnerDFA(Machine machine, Alphabet alphabet, boolean table) {
 		TeacherDK teacher = new TeacherDK(machine, alphabet);
@@ -37,6 +41,13 @@ public class DFALearnCompare {
 		}
 		
 		time = System.currentTimeMillis() - time;
+		if(table) {
+			numMemTable += teacher.getNumMembership();
+			numEqTable += teacher.getNumEquivalence();
+		}else {
+			numMemTree += teacher.getNumMembership();
+			numEqTree += teacher.getNumEquivalence();
+		}
 		return time;
 	}
 	
@@ -45,12 +56,12 @@ public class DFALearnCompare {
 		int numCases = Integer.parseInt(args[0]);
 		int numStates = Integer.parseInt(args[1]);
 		
-		final int apSize = 40;
+		final int apSize = 100;
 		long timeTable = 0;
 		long timeTree = 0;
 		
 		int n = 0;
-		for(int k = 30; k <= apSize; k ++) {
+		for(int k = apSize - 1; k <= apSize; k ++) {
 			for(int i = 0; i < numCases; i ++) {
 				n ++;
 				Alphabet alphabet = new Alphabet(String.class);
@@ -66,7 +77,8 @@ public class DFALearnCompare {
 		}
 		System.out.println("numCases = " + n);
 		System.out.println("table=" + (timeTable / 1000) + " tree=" + (timeTree / 1000));
-		
+		System.out.println("table MQ=" + numMemTable + " tree MQ=" + numMemTree);
+		System.out.println("table EQ=" + numEqTable + " tree EQ=" + numEqTree);
 		
 	}
 	

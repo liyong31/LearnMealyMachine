@@ -35,6 +35,9 @@ public class TeacherDK implements MembershipOracle<HashableValue>, EquivalenceOr
 	private final Machine machine;
 	private final Alphabet alphabet;
 	
+	private int numMembership = 0;
+	private int numEquiv = 0;
+	
 	public TeacherDK(Machine machine, Alphabet alphabet) {
 		this.automaton = UtilMachine.dfaToDkAutomaton(machine);
 		this.machine = machine;
@@ -55,7 +58,7 @@ public class TeacherDK implements MembershipOracle<HashableValue>, EquivalenceOr
 	
 	@Override
 	public Query<HashableValue> answerEquivalenceQuery(Machine machine) {
-		
+		numEquiv ++;
 		Automaton conjecture = UtilMachine.dfaToDkAutomaton(machine);
 		Automaton result = automaton.clone().minus(conjecture.clone());
 		String counterexample = result.getShortestExample(true);
@@ -80,9 +83,19 @@ public class TeacherDK implements MembershipOracle<HashableValue>, EquivalenceOr
 
 	@Override
 	public HashableValue answerMembershipQuery(Query<HashableValue> query) {
+		numMembership ++;
 		Word word = query.getQueriedWord();
 		boolean result = machine.runDFA(word);
 		return new HashableValueBoolean(result);
+	}
+	
+	
+	public int getNumMembership() {
+		return numMembership;
+	}
+	
+	public int getNumEquivalence() {
+		return numEquiv;
 	}
 	
 
